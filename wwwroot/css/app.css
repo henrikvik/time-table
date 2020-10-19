@@ -35,17 +35,20 @@
 
 th
 {
-    font-size: 16pt;
-    font-weight: lighter;
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+    font-weight: normal;
 }
 
 td
 {
-    padding: 0 16pt;
-    font-size: 32pt;
+    padding: 0 4pt;
+    margin: 0;
+    font-size: 24pt;
     font-weight: bold;
 }
 button
 {
-    font-size: 24pt;
+    font-size: 12pt;
 }
