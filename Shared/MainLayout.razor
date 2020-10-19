@@ -1,0 +1,91 @@
+﻿@using System.Timers
+@inherits LayoutComponentBase
+@inject LocalStorage LocalStorage;
+
+<div class="page @(StateClass)">
+    <table>
+        <tr>
+            <th>Came</th>
+            <th>Break</th>
+            <th>Left</th>
+        </tr>
+        <tr>
+            <td>@Format(_timerState.FirstEntry)</td>
+            <td>@Format(_timerState.TotalBreakDuration, true)</td>
+            <td>@Format(_timerState.LastEntry)</td>
+        </tr>
+    </table>
+    
+    <table>
+        <tr>
+            <th>Flex</th>
+            <th>Session</th>
+        </tr>
+        <tr>
+            <td>@Format(_timerState.Flex, true)</td>
+            <td>@Format(_timerState.CurrentSession, true)</td>
+        </tr>
+    </table>
+    
+    &nbsp;
+
+    @if (_timerState.IsWorking)
+    {
+        <button @onclick="StopWorking">Stop Working</button>
+    }
+    else
+    {
+        <button @onclick="StartWorking">Start working</button>
+        <button @onclick="Reset">Reset</button>
+    }
+</div>
+
+@code
+{
+    private Timer _updateTimer;
+    private TimerState _timerState;
+
+    private string StateClass => _timerState.IsWorking ? "work" : "pause";
+
+    private void StartWorking()
+    {
+        _timerState.StartWorking();
+        LocalStorage.SetItem("state", _timerState.ToJson()).Forget();
+    }
+
+    private void StopWorking()
+    {
+        _timerState.StopWorking();
+        LocalStorage.SetItem("state", _timerState.ToJson()).Forget();
+    }
+
+    private void Reset()
+    {
+        _timerState = new TimerState();
+        LocalStorage.SetItem("state", null).Forget();
+    }
+
+    private static string Format(DateTime dateTime)
+    {
+        return dateTime.ToString("HH:mm");
+    }
+
+    private static string Format(TimeSpan timeSpan, bool showSeconds = true)
+    {
+        var signOffset = Math.Sign(timeSpan.Ticks) == -1 ? 1 : 0;
+        return timeSpan.ToString("c").Substring(0, (showSeconds ? 8 : 5) + signOffset);
+    }
+
+    protected override void OnInitialized()
+    {
+        LocalStorage.GetItem("state").ContinueWith(t =>
+        {
+            _timerState = TimerState.FromJson(t.Result);
+            StateHasChanged();
+        });
+
+        _updateTimer = new Timer(1000);
+        _updateTimer.Elapsed += (_, _) => StateHasChanged();
+        _updateTimer.Start();
+    }
+}

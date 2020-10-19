@@ -1,0 +1,51 @@
+﻿html, body, #app {
+    font-family: sans-serif;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.page
+{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+    
+    color: hsl(0, 0%, 90%);
+}
+
+.pause {
+    background-color: hsl(0, 0%, 40%);
+}
+
+.work {
+    background-color: hsl(100, 25%, 40%);
+}
+
+.break {
+    background-color: hsl(50, 25%, 40%);
+}
+
+th
+{
+    font-size: 16pt;
+    font-weight: lighter;
+}
+
+td
+{
+    padding: 0 16pt;
+    font-size: 32pt;
+    font-weight: bold;
+}
+button
+{
+    font-size: 24pt;
+}
